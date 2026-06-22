@@ -1,0 +1,30 @@
+---
+import { getPublishedPosts } from '../../lib/posts';
+import PostLayout from '../../layouts/PostLayout.astro';
+
+export async function getStaticPaths() {
+  const posts = await getPublishedPosts();
+  return posts.map((post, i) => ({
+    params: { slug: post.slug },
+    props: {
+      post,
+      // 下一篇（更新）；上一篇（更旧）
+      next: posts[i - 1] && {
+        slug: posts[i - 1].slug,
+        data: posts[i - 1].data,
+      },
+      prev: posts[i + 1] && {
+        slug: posts[i + 1].slug,
+        data: posts[i + 1].data,
+      },
+    },
+  }));
+}
+
+const { post, prev, next } = Astro.props;
+const { Content } = await post.render();
+---
+
+<PostLayout post={post} prev={prev} next={next}>
+  <Content />
+</PostLayout>

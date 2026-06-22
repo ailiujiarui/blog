@@ -1,0 +1,97 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostCard from '../components/PostCard.astro';
+import Search from '../components/Search.astro';
+import { getPublishedPosts } from '../lib/posts';
+import { SITE } from '../consts';
+
+const posts = await getPublishedPosts();
+const recent = posts.slice(0, SITE.pageSize);
+const featured = recent[0];
+const rest = recent.slice(1);
+const base = import.meta.env.BASE_URL;
+---
+
+<BaseLayout>
+  <section class="mx-auto max-w-5xl">
+    <!-- Hero -->
+    <div class="animate-fade-up px-4 py-16 text-center md:py-24">
+      <div class="mb-6 inline-flex items-center gap-2 rounded-full bg-accent/10 px-4 py-1.5 text-sm text-accent ring-1 ring-accent/20">
+        <span class="relative flex h-2 w-2">
+          <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-75"></span>
+          <span class="relative inline-flex h-2 w-2 rounded-full bg-accent"></span>
+        </span>
+        欢迎来到极光博客
+      </div>
+
+      <h1 class="text-5xl font-extrabold leading-tight tracking-tight md:text-7xl">
+        <span class="text-gradient">极光之下</span>
+        <br />
+        <span class="text-fg">记录代码与思考</span>
+      </h1>
+
+      <p class="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-muted">
+        {SITE.description}。这里写关于前端、设计与生活的字句。
+      </p>
+
+      <div class="mt-10 flex flex-wrap items-center justify-center gap-4">
+        <a href={`${base}posts`} class="btn-gradient rounded-xl px-7 py-3 font-semibold">
+          浏览文章
+        </a>
+        <a
+          href={`${base}about`}
+          class="glass rounded-xl px-7 py-3 font-semibold transition-transform hover:-translate-y-0.5"
+        >
+          关于我
+        </a>
+      </div>
+
+      <!-- 搜索框 -->
+      <div class="mx-auto mt-10 max-w-xl text-left">
+        <Search />
+      </div>
+    </div>
+
+    <!-- 最新文章 -->
+    {recent.length > 0 && (
+      <div class="px-4 py-10">
+        <div class="mb-8 flex items-end justify-between">
+          <div>
+            <h2 class="text-2xl font-bold tracking-tight md:text-3xl">最新文章</h2>
+            <p class="mt-1 text-sm text-muted">最近的思考与笔记</p>
+          </div>
+          <a href={`${base}posts`} class="link-hover text-sm font-medium text-accent">
+            查看全部 →
+          </a>
+        </div>
+
+        {featured && (
+          <div class="mb-6">
+            <PostCard
+              title={featured.data.title}
+              description={featured.data.description}
+              pubDate={featured.data.pubDate}
+              tags={featured.data.tags}
+              url={featured.slug}
+              featured
+            />
+          </div>
+        )}
+
+        {rest.length > 0 && (
+          <div class="grid gap-6 md:grid-cols-2">
+            {rest.map((post) => (
+              <PostCard
+                title={post.data.title}
+                description={post.data.description}
+                pubDate={post.data.pubDate}
+                tags={post.data.tags}
+                url={post.slug}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    )}
+  </section>
+</BaseLayout>

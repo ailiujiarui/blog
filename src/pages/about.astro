@@ -1,0 +1,63 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../consts';
+---
+
+<BaseLayout title="关于" description={`关于 ${SITE.author}`}>
+  <section class="mx-auto max-w-3xl px-4">
+    <header class="mb-10 animate-fade-up text-center">
+      <div class="mx-auto mb-6 grid h-24 w-24 place-items-center rounded-3xl bg-gradient-to-br from-accent to-accent-soft text-3xl font-bold text-white shadow-xl shadow-accent/30">
+        {SITE.author.slice(0, 1)}
+      </div>
+      <h1 class="text-4xl font-extrabold tracking-tight md:text-5xl">
+        <span class="text-gradient">关于我</span>
+      </h1>
+      <p class="mt-3 text-muted">{SITE.author} · {SITE.email}</p>
+    </header>
+
+    <div
+      class="prose glass max-w-none rounded-2xl p-8 dark:prose-invert prose-h2:font-bold prose-h2:tracking-tight"
+    >
+      <p class="text-lg leading-relaxed">
+        你好，我是 <strong>{SITE.author}</strong>。这是我的个人博客 ——
+        <span class="text-gradient font-semibold">{SITE.title}</span>。
+      </p>
+
+      <h2>这里写什么</h2>
+      <ul>
+        <li>前端、后端、工程化的<strong>技术笔记</strong></li>
+        <li>设计、颜色、动效的<strong>灵感碎片</strong></li>
+        <li>偶尔的<strong>生活随笔</strong></li>
+      </ul>
+
+      <h2>这个博客</h2>
+      <p>
+        由 <a href="https://astro.build" target="_blank" rel="noopener">Astro</a> 强力驱动，
+        视觉采用极光玻璃态风格。源码完全开源，欢迎 star。
+      </p>
+
+      <h2>联系方式</h2>
+      <p>
+        想聊点什么？欢迎通过下方渠道找到我：
+      </p>
+    </div>
+
+    <div class="mt-8 flex flex-wrap justify-center gap-3">
+      {SITE.social.github && (
+        <a href={SITE.social.github} target="_blank" rel="noopener" class="glass rounded-xl px-5 py-3 font-medium transition-transform hover:-translate-y-0.5">
+          GitHub
+        </a>
+      )}
+      {SITE.social.twitter && (
+        <a href={SITE.social.twitter} target="_blank" rel="noopener" class="glass rounded-xl px-5 py-3 font-medium transition-transform hover:-translate-y-0.5">
+          Twitter
+        </a>
+      )}
+      {SITE.social.email && (
+        <a href={SITE.social.email} class="glass rounded-xl px-5 py-3 font-medium transition-transform hover:-translate-y-0.5">
+          Email
+        </a>
+      )}
+    </div>
+  </section>
+</BaseLayout>

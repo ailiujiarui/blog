@@ -1,0 +1,86 @@
+---
+import { SITE, NAV_LINKS } from '../consts';
+import ThemeToggle from './ThemeToggle.astro';
+
+const { pathname } = Astro.url;
+// 处理部署到子路径的情况（base 路径）
+const base = import.meta.env.BASE_URL;
+const isActive = (href: string) => {
+  const target = (base + href.replace(/^\//, '')).replace(/\/$/, '') || '/';
+  const current = pathname.replace(/\/$/, '') || '/';
+  return current === target || (href !== '/' && current.startsWith(target));
+};
+---
+
+<header class="sticky top-0 z-40 px-4 pt-4">
+  <nav class="glass mx-auto flex max-w-5xl items-center justify-between rounded-2xl px-5 py-3">
+    <!-- Logo -->
+    <a href={base} class="group flex items-center gap-2.5">
+      <span class="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-accent to-accent-soft text-white shadow-lg shadow-accent/40 transition-transform group-hover:rotate-12">
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+          <path d="M5 18 Q12 4 19 18" />
+          <circle cx="12" cy="15" r="1.6" fill="currentColor" stroke="none" />
+        </svg>
+      </span>
+      <span class="text-base font-bold tracking-tight">{SITE.title}</span>
+    </a>
+
+    <!-- 导航链接 -->
+    <div class="hidden items-center gap-1 md:flex">
+      {NAV_LINKS.map((link) => (
+        <a
+          href={base + link.href.replace(/^\//, '')}
+          class:list={[
+            'rounded-lg px-3 py-1.5 text-sm font-medium transition-colors',
+            isActive(link.href)
+              ? 'bg-accent/15 text-accent'
+              : 'text-muted hover:text-fg hover:bg-fg/5',
+          ]}
+        >
+          {link.text}
+        </a>
+      ))}
+    </div>
+
+    <div class="flex items-center gap-2">
+      <ThemeToggle />
+      <!-- 移动端菜单 -->
+      <button
+        id="mobile-menu-btn"
+        type="button"
+        aria-label="菜单"
+        class="glass grid h-10 w-10 place-items-center rounded-xl md:hidden"
+      >
+        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16" />
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- 移动端下拉 -->
+  <div
+    id="mobile-menu"
+    class="glass mx-auto mt-2 hidden max-w-5xl rounded-2xl p-2 md:hidden"
+  >
+    {NAV_LINKS.map((link) => (
+      <a
+        href={base + link.href.replace(/^\//, '')}
+        class:list={[
+          'block rounded-xl px-4 py-3 text-sm font-medium transition-colors',
+          isActive(link.href)
+            ? 'bg-accent/15 text-accent'
+            : 'text-fg/80 hover:bg-fg/5',
+        ]}
+      >
+        {link.text}
+      </a>
+    ))}
+  </div>
+</header>
+
+<script>
+  const btn = document.getElementById('mobile-menu-btn');
+  const menu = document.getElementById('mobile-menu');
+  btn?.addEventListener('click', () => menu?.classList.toggle('hidden'));
+</script>

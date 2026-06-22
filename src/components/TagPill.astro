@@ -1,0 +1,20 @@
+---
+interface Props {
+  text: string;
+  href?: string;
+  count?: number;
+}
+const { text, href, count } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const tagHref = href ?? `${base}tags/${text}`;
+const Tag = href ? 'a' : 'span';
+---
+<Tag
+  href={href ? tagHref : undefined}
+  class="tag-pill"
+>
+  #{text}
+  {count !== undefined && (
+    <span class="ml-1.5 text-[0.7rem] opacity-70">({count})</span>
+  )}
+</Tag>

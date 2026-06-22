@@ -1,0 +1,72 @@
+---
+// Pagefind 搜索组件：构建后 pagefind 在 dist/pagefind 生成索引与 UI
+// 这里只放一个挂载点 + 样式包裹，UI 由 Pagefind 注入
+const base = import.meta.env.BASE_URL;
+const pagefindCss = `${base}pagefind/pagefind-ui.css`;
+---
+<div class="search-wrapper glass rounded-2xl p-1">
+  <div id="search"></div>
+</div>
+
+<link rel="stylesheet" href={pagefindCss} />
+
+<style>
+  /* 把 Pagefind UI 嵌进玻璃态外观 */
+  :global(#search .pagefind-ui) {
+    --pagefind-ui-scale: 0.9;
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+  }
+  :global(#search .pagefind-ui__search-input) {
+    background: transparent !important;
+    border: none !important;
+    color: rgb(var(--color-fg)) !important;
+    padding: 0.65rem 0.5rem !important;
+    height: auto !important;
+  }
+  :global(#search .pagefind-ui__search-input::placeholder) {
+    color: rgb(var(--color-muted)) !important;
+  }
+  :global(#search .pagefind-ui__drawer) {
+    background: rgb(var(--glass-bg) / 0.9) !important;
+    backdrop-filter: blur(20px);
+    border: 1px solid rgb(var(--color-border)) !important;
+    border-radius: 12px !important;
+  }
+  :global(#search .pagefind-ui__result-link) {
+    color: rgb(var(--color-fg)) !important;
+  }
+  :global(#search .pagefind-ui__result-excerpt) {
+    color: rgb(var(--color-muted)) !important;
+  }
+</style>
+
+<script>
+  // 客户端按需加载 Pagefind UI
+  async function initPagefind() {
+    const el = document.getElementById('search');
+    if (!el) return;
+    try {
+      const base = import.meta.env.BASE_URL;
+      const pagefindUrl = `${base}pagefind/pagefind-ui.js`;
+      // @ts-ignore - pagefind-ui.js 由构建后生成
+      const { PagefindUI } = await import(/* @vite-ignore */ pagefindUrl);
+      new PagefindUI({
+        element: '#search',
+        showSubResults: true,
+        translations: {
+          placeholder: '搜索文章…',
+          zero_results: '没有找到相关文章',
+          clear_search: '清除',
+        },
+      });
+    } catch (e) {
+      // 本地 dev 模式下 /pagefind 还不存在，静默降级
+      el.innerHTML =
+        '<div class="px-3 py-2 text-sm text-muted">搜索将在构建后生效（npm run build）</div>';
+    }
+  }
+  initPagefind();
+</script>

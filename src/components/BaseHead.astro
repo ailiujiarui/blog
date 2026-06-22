@@ -1,0 +1,67 @@
+---
+import { SITE } from '../consts';
+
+export interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+}
+
+const {
+  title = SITE.title,
+  description = SITE.description,
+  image = '/favicon.svg',
+} = Astro.props;
+
+const base = import.meta.env.BASE_URL;
+const withBase = (path: string) =>
+  path.startsWith('/') ? `${base}${path.slice(1)}` : `${base}${path}`;
+
+// 完整规范标题
+const pageTitle = title === SITE.title ? title : `${title} · ${SITE.title}`;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const socialImage = new URL(withBase(image), Astro.site);
+const faviconURL = withBase('/favicon.svg');
+const rssURL = new URL(withBase('/rss.xml'), Astro.site);
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="generator" content={Astro.generator} />
+<link rel="icon" type="image/svg+xml" href={faviconURL} />
+
+<!-- 主题初始化：在首屏前同步执行，避免主题闪烁（FOUC） -->
+<script is:inline>
+  (function () {
+    const stored = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const isDark = stored ? stored === 'dark' : prefersDark;
+    document.documentElement.classList.toggle('dark', isDark);
+  })();
+</script>
+
+<!-- RSS -->
+<link
+  rel="alternate"
+  type="application/rss+xml"
+  title={SITE.title}
+  href={rssURL}
+/>
+
+<!-- Canonical & sitemap -->
+<link rel="canonical" href={canonicalURL} />
+
+<!-- Open Graph / Twitter Card -->
+<title>{pageTitle}</title>
+<meta name="title" content={pageTitle} />
+<meta name="description" content={description} />
+<meta property="og:type" content="website" />
+<meta property="og:url" content={canonicalURL} />
+<meta property="og:title" content={pageTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={socialImage} />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:url" content={canonicalURL} />
+<meta name="twitter:title" content={pageTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={socialImage} />

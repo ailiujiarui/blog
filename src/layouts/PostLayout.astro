@@ -1,0 +1,89 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import TagPill from '../components/TagPill.astro';
+import type { CollectionEntry } from 'astro:content';
+import { SITE } from '../consts';
+
+interface Props {
+  post: CollectionEntry<'posts'>;
+  prev?: { slug: string; data: CollectionEntry<'posts'>['data'] };
+  next?: { slug: string; data: CollectionEntry<'posts'>['data'] };
+}
+
+const { post, prev, next } = Astro.props;
+const { data } = post;
+const base = import.meta.env.BASE_URL;
+---
+
+<BaseLayout title={data.title} description={data.description}>
+  <article class="mx-auto max-w-3xl">
+    <!-- 返回链接 -->
+    <a
+      href={`${base}posts`}
+      class="mb-8 inline-flex items-center gap-1.5 text-sm text-muted transition-colors hover:text-accent"
+    >
+      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+      </svg>
+      返回文章列表
+    </a>
+
+    <!-- 文章头部 -->
+    <header class="animate-fade-up">
+      <div class="mb-4 flex flex-wrap items-center gap-3 text-sm text-muted">
+        <FormattedDate date={data.pubDate} />
+        {data.updatedDate && (
+          <span class="text-muted">· 更新于 <FormattedDate date={data.updatedDate} /></span>
+        )}
+        <span class="text-muted">· 约 {SITE.author}</span>
+      </div>
+
+      <h1 class="text-3xl font-extrabold leading-tight tracking-tight md:text-5xl">
+        <span class="text-gradient">{data.title}</span>
+      </h1>
+
+      <p class="mt-4 text-lg leading-relaxed text-muted">{data.description}</p>
+
+      {data.tags.length > 0 && (
+        <div class="mt-6 flex flex-wrap gap-2">
+          {data.tags.map((tag) => <TagPill text={tag} href={`${base}tags/${tag}`} />)}
+        </div>
+      )}
+    </header>
+
+    <hr class="my-8 border-border/60" />
+
+    <!-- 文章正文 -->
+    <div
+      class="prose prose-lg max-w-none animate-fade-in dark:prose-invert prose-headings:scroll-mt-24 prose-headings:font-bold prose-headings:tracking-tight prose-a:transition-colors"
+      data-pagefind-body
+    >
+      <slot />
+    </div>
+
+    <!-- 上下篇导航 -->
+    {(prev || next) && (
+      <nav class="mt-16 grid gap-4 sm:grid-cols-2">
+        {prev ? (
+          <a
+            href={`${base}posts/${prev.slug}`}
+            class="glass group rounded-2xl p-5 transition-transform hover:-translate-y-1"
+          >
+            <div class="text-xs text-muted">← 上一篇</div>
+            <div class="mt-1 font-semibold group-hover:text-accent">{prev.data.title}</div>
+          </a>
+        ) : <div />}
+        {next ? (
+          <a
+            href={`${base}posts/${next.slug}`}
+            class="glass group rounded-2xl p-5 text-right transition-transform hover:-translate-y-1"
+          >
+            <div class="text-xs text-muted">下一篇 →</div>
+            <div class="mt-1 font-semibold group-hover:text-accent">{next.data.title}</div>
+          </a>
+        ) : <div />}
+      </nav>
+    )}
+  </article>
+</BaseLayout>

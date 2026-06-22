@@ -1,0 +1,229 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============ 主题变量 ============ */
+@layer base {
+  :root {
+    /* 亮色：柔和粉紫蓝 */
+    --color-bg: 250 248 255;
+    --color-fg: 30 27 46;
+    --color-muted: 100 95 130;
+    --color-accent: 168 85 247;       /* 紫 */
+    --color-accent-soft: 236 72 153;  /* 粉 */
+    --color-border: 220 214 240;
+
+    --blob-1: 168 85 247;   /* 紫 */
+    --blob-2: 236 72 153;   /* 粉 */
+    --blob-3: 56 189 248;   /* 青 */
+
+    --glass-bg: 255 255 255;
+    --glass-alpha: 0.55;
+    --glass-border: 255 255 255;
+    --glass-border-alpha: 0.6;
+  }
+
+  .dark {
+    /* 暗色：深邃午夜 */
+    --color-bg: 11 11 20;
+    --color-fg: 237 233 254;
+    --color-muted: 148 148 175;
+    --color-accent: 192 132 252;
+    --color-accent-soft: 244 114 182;
+    --color-border: 40 40 65;
+
+    --blob-1: 139 92 246;
+    --blob-2: 236 72 153;
+    --blob-3: 34 211 238;
+
+    --glass-bg: 20 20 38;
+    --glass-alpha: 0.5;
+    --glass-border: 255 255 255;
+    --glass-border-alpha: 0.08;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background-color: rgb(var(--color-bg));
+    color: rgb(var(--color-fg));
+    min-height: 100vh;
+    transition: background-color 0.4s ease, color 0.4s ease;
+  }
+
+  ::selection {
+    background: rgb(var(--color-accent) / 0.3);
+    color: rgb(var(--color-fg));
+  }
+
+  /* 滚动条 */
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    background: rgb(var(--color-accent) / 0.4);
+    border-radius: 10px;
+  }
+  ::-webkit-scrollbar-thumb:hover { background: rgb(var(--color-accent) / 0.6); }
+}
+
+/* ============ 玻璃态工具类 ============ */
+@layer components {
+  .glass {
+    background: rgb(var(--glass-bg) / var(--glass-alpha));
+    backdrop-filter: blur(20px) saturate(140%);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+    border: 1px solid rgb(var(--glass-border) / var(--glass-border-alpha));
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.12),
+      inset 0 1px 0 rgb(255 255 255 / 0.1);
+  }
+
+  .dark .glass {
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.4),
+      inset 0 1px 0 rgb(255 255 255 / 0.05);
+  }
+
+  /* 渐变文字 */
+  .text-gradient {
+    background: linear-gradient(
+      120deg,
+      rgb(var(--color-accent)) 0%,
+      rgb(var(--color-accent-soft)) 50%,
+      rgb(var(--blob-3)) 100%
+    );
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradient-x 6s ease infinite;
+  }
+
+  /* 渐变按钮 */
+  .btn-gradient {
+    background: linear-gradient(120deg, rgb(var(--color-accent)), rgb(var(--color-accent-soft)));
+    color: white;
+    box-shadow: 0 4px 20px rgb(var(--color-accent) / 0.4);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .btn-gradient:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgb(var(--color-accent) / 0.55);
+  }
+  .btn-gradient:active { transform: translateY(0); }
+
+  /* 主链接 hover */
+  .link-hover {
+    position: relative;
+    transition: color 0.2s;
+  }
+  .link-hover::after {
+    content: '';
+    position: absolute;
+    left: 0; bottom: -2px;
+    width: 0; height: 2px;
+    background: linear-gradient(90deg, rgb(var(--color-accent)), rgb(var(--color-accent-soft)));
+    transition: width 0.3s ease;
+  }
+  .link-hover:hover::after { width: 100%; }
+
+  /* 标签胶囊 */
+  .tag-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.8rem;
+    border-radius: 9999px;
+    background: rgb(var(--color-accent) / 0.1);
+    border: 1px solid rgb(var(--color-accent) / 0.25);
+    color: rgb(var(--color-accent));
+    transition: all 0.2s;
+  }
+  .tag-pill:hover {
+    background: rgb(var(--color-accent) / 0.2);
+    transform: translateY(-1px);
+  }
+}
+
+/* ============ 极光背景 ============ */
+.aurora {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.aurora-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.45;
+  will-change: transform;
+}
+
+.aurora-blob--1 {
+  width: 45vw; height: 45vw;
+  top: -10%; left: -5%;
+  background: radial-gradient(circle, rgb(var(--blob-1) / 0.9), transparent 70%);
+  animation: aurora-float-1 22s ease-in-out infinite;
+}
+.aurora-blob--2 {
+  width: 40vw; height: 40vw;
+  top: 30%; right: -10%;
+  background: radial-gradient(circle, rgb(var(--blob-2) / 0.85), transparent 70%);
+  animation: aurora-float-2 28s ease-in-out infinite;
+}
+.aurora-blob--3 {
+  width: 50vw; height: 50vw;
+  bottom: -15%; left: 25%;
+  background: radial-gradient(circle, rgb(var(--blob-3) / 0.7), transparent 70%);
+  animation: aurora-float-3 34s ease-in-out infinite;
+}
+
+.dark .aurora-blob { opacity: 0.35; }
+
+@keyframes aurora-float-1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%      { transform: translate(8vw, -6vh) scale(1.15); }
+}
+@keyframes aurora-float-2 {
+  0%, 100% { transform: translate(0, 0) scale(1.1); }
+  50%      { transform: translate(-10vw, 8vh) scale(0.9); }
+}
+@keyframes aurora-float-3 {
+  0%, 100% { transform: translate(0, 0) scale(0.95); }
+  50%      { transform: translate(6vw, 10vh) scale(1.2); }
+}
+@keyframes gradient-x {
+  0%, 100% { background-position: 0% 50%; }
+  50%      { background-position: 100% 50%; }
+}
+
+/* 尊重用户的"减少动态效果"偏好 */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .aurora-blob { animation: none; }
+}
+
+/* ============ Pagefind 搜索样式覆盖 ============ */
+:root {
+  --pagefind-ui-scale: 0.9;
+  --pagefind-ui-primary: rgb(var(--color-accent));
+  --pagefind-ui-text: rgb(var(--color-fg));
+  --pagefind-ui-background: rgb(var(--glass-bg) / var(--glass-alpha));
+  --pagefind-ui-border: rgb(var(--color-border));
+  --pagefind-ui-tag: rgb(var(--color-accent) / 0.12);
+  --pagefind-ui-border-radius: 12px;
+  --pagefind-ui-image-border-radius: 8px;
+  --pagefind-ui-image-box-ratio: 3 / 2;
+  --pagefind-ui-font: 'Inter', system-ui, sans-serif;
+}
