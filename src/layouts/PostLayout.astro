@@ -17,11 +17,11 @@ const base = import.meta.env.BASE_URL;
 ---
 
 <BaseLayout title={data.title} description={data.description}>
-  <article class="mx-auto max-w-3xl">
+  <article class="mx-auto max-w-3xl border-x border-border/60 bg-surface/55 px-5 py-8 shadow-paper md:px-10">
     <!-- 返回链接 -->
     <a
       href={`${base}posts`}
-      class="mb-8 inline-flex items-center gap-1.5 text-sm text-muted transition-colors hover:text-accent"
+      class="mb-8 inline-flex items-center gap-1.5 font-mono text-xs uppercase text-muted transition-colors hover:text-accent"
     >
       <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
         <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
@@ -30,8 +30,8 @@ const base = import.meta.env.BASE_URL;
     </a>
 
     <!-- 文章头部 -->
-    <header class="animate-fade-up">
-      <div class="mb-4 flex flex-wrap items-center gap-3 text-sm text-muted">
+    <header class="animate-fade-up border-b border-border/80 pb-8">
+      <div class="mb-4 flex flex-wrap items-center gap-3 font-mono text-xs text-muted">
         <FormattedDate date={data.pubDate} />
         {data.updatedDate && (
           <span class="text-muted">· 更新于 <FormattedDate date={data.updatedDate} /></span>
@@ -39,8 +39,8 @@ const base = import.meta.env.BASE_URL;
         <span class="text-muted">· 约 {SITE.author}</span>
       </div>
 
-      <h1 class="text-3xl font-extrabold leading-tight tracking-tight md:text-5xl">
-        <span class="text-gradient">{data.title}</span>
+      <h1 class="font-serif text-3xl font-semibold leading-tight md:text-5xl">
+        <span>{data.title}</span>
       </h1>
 
       <p class="mt-4 text-lg leading-relaxed text-muted">{data.description}</p>
@@ -52,11 +52,9 @@ const base = import.meta.env.BASE_URL;
       )}
     </header>
 
-    <hr class="my-8 border-border/60" />
-
     <!-- 文章正文 -->
     <div
-      class="prose prose-lg max-w-none animate-fade-in dark:prose-invert prose-headings:scroll-mt-24 prose-headings:font-bold prose-headings:tracking-tight prose-a:transition-colors"
+      class="prose prose-lg mt-8 max-w-none animate-fade-in dark:prose-invert prose-headings:scroll-mt-24 prose-headings:font-bold prose-a:transition-colors"
       data-pagefind-body
     >
       <slot />
@@ -68,7 +66,7 @@ const base = import.meta.env.BASE_URL;
         {prev ? (
           <a
             href={`${base}posts/${prev.slug}`}
-            class="glass group rounded-2xl p-5 transition-transform hover:-translate-y-1"
+            class="glass group p-5 transition-transform hover:-translate-y-1"
           >
             <div class="text-xs text-muted">← 上一篇</div>
             <div class="mt-1 font-semibold group-hover:text-accent">{prev.data.title}</div>
@@ -77,7 +75,7 @@ const base = import.meta.env.BASE_URL;
         {next ? (
           <a
             href={`${base}posts/${next.slug}`}
-            class="glass group rounded-2xl p-5 text-right transition-transform hover:-translate-y-1"
+            class="glass group p-5 text-right transition-transform hover:-translate-y-1"
           >
             <div class="text-xs text-muted">下一篇 →</div>
             <div class="mt-1 font-semibold group-hover:text-accent">{next.data.title}</div>

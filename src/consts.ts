@@ -1,9 +1,9 @@
 // 站点全局配置 —— 把这里改成你自己的信息即可
 export const SITE = {
   /** 站点名称（显示在导航栏和 Logo） */
-  title: 'Aurora Blog',
+  title: '歌鱼',
   /** 站点副标题 / 一句话描述 */
-  description: '极光之下，记录代码与思考',
+  description: '把想清楚的事，写成可回看的东西',
   /** 作者名 */
   author: '歌鱼',
   /** 邮箱（用于 RSS / SEO） */
@@ -14,7 +14,7 @@ export const SITE = {
   pageSize: 6,
   /** 社交链接（留空字符串则不显示） */
   social: {
-    github: 'https://github.com/your-username',
+    github: 'https://github.com/ailiujiarui',
     twitter: '',
     email: 'mailto:you@example.com',
   },

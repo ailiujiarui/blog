@@ -7,6 +7,7 @@ export default {
       colors: {
         // 通过 CSS 变量驱动，方便主题切换
         bg: 'rgb(var(--color-bg) / <alpha-value>)',
+        surface: 'rgb(var(--color-surface) / <alpha-value>)',
         fg: 'rgb(var(--color-fg) / <alpha-value>)',
         muted: 'rgb(var(--color-muted) / <alpha-value>)',
         accent: {
@@ -17,32 +18,17 @@ export default {
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
+        serif: ['Noto Serif SC', 'Source Serif 4', 'Georgia', 'serif'],
         mono: ['JetBrains Mono', 'Consolas', 'Monaco', 'monospace'],
       },
       maxWidth: {
         content: '72ch',
       },
       animation: {
-        'aurora-1': 'aurora-float-1 22s ease-in-out infinite',
-        'aurora-2': 'aurora-float-2 28s ease-in-out infinite',
-        'aurora-3': 'aurora-float-3 34s ease-in-out infinite',
         'fade-up': 'fade-up 0.6s ease-out both',
         'fade-in': 'fade-in 0.5s ease-out both',
-        'gradient-x': 'gradient-x 6s ease infinite',
       },
       keyframes: {
-        'aurora-float-1': {
-          '0%,100%': { transform: 'translate(0,0) scale(1)' },
-          '50%': { transform: 'translate(8vw,-6vh) scale(1.15)' },
-        },
-        'aurora-float-2': {
-          '0%,100%': { transform: 'translate(0,0) scale(1.1)' },
-          '50%': { transform: 'translate(-10vw,8vh) scale(0.9)' },
-        },
-        'aurora-float-3': {
-          '0%,100%': { transform: 'translate(0,0) scale(0.95)' },
-          '50%': { transform: 'translate(6vw,10vh) scale(1.2)' },
-        },
         'fade-up': {
           '0%': { opacity: '0', transform: 'translateY(16px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
@@ -50,10 +36,6 @@ export default {
         'fade-in': {
           '0%': { opacity: '0' },
           '100%': { opacity: '1' },
-        },
-        'gradient-x': {
-          '0%,100%': { 'background-position': '0% 50%' },
-          '50%': { 'background-position': '100% 50%' },
         },
       },
       backdropBlur: {
@@ -92,8 +74,8 @@ export default {
               padding: '0.75rem 1.25rem',
               fontStyle: 'normal',
             },
-            h1: { letterSpacing: '-0.02em' },
-            h2: { letterSpacing: '-0.02em' },
+            h1: { letterSpacing: '0' },
+            h2: { letterSpacing: '0' },
           },
         },
       },

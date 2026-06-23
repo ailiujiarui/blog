@@ -13,60 +13,71 @@ const base = import.meta.env.BASE_URL;
 ---
 
 <BaseLayout>
-  <section class="mx-auto max-w-5xl">
-    <!-- Hero -->
-    <div class="animate-fade-up px-4 py-16 text-center md:py-24">
-      <div class="mb-6 inline-flex items-center gap-2 rounded-full bg-accent/10 px-4 py-1.5 text-sm text-accent ring-1 ring-accent/20">
-        <span class="relative flex h-2 w-2">
-          <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-75"></span>
-          <span class="relative inline-flex h-2 w-2 rounded-full bg-accent"></span>
-        </span>
-        欢迎来到极光博客
+  <section class="paper-stage mx-auto max-w-6xl">
+    <div class="paper-hero">
+      <div class="paper-hero-copy">
+        <div class="paper-kicker">FIELD NOTES / CODE / LIFE</div>
+
+        <h1 class="paper-title">
+          把想清楚的事，
+          <span>写成可回看的东西。</span>
+        </h1>
+
+        <p class="paper-lead">
+          不是一个温吞的模板博客。它像一本私人技术杂志：纸面质感负责阅读，工程细节负责锋芒，文章仍然是主角。
+        </p>
+
+        <div class="paper-actions">
+          <a href={`${base}posts`} class="paper-button paper-button--primary">浏览文章</a>
+          <a href={`${base}about`} class="paper-button">关于我</a>
+        </div>
       </div>
 
-      <h1 class="text-5xl font-extrabold leading-tight tracking-tight md:text-7xl">
-        <span class="text-gradient">极光之下</span>
-        <br />
-        <span class="text-fg">记录代码与思考</span>
-      </h1>
+      <aside class="build-note">
+        <strong>build note</strong>
+        <code>
+          const taste = paper<br />
+          &nbsp;&nbsp;+ motion<br />
+          &nbsp;&nbsp;+ typesetting;<br />
+          export default human;
+        </code>
+      </aside>
+    </div>
 
-      <p class="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-muted">
-        {SITE.description}。这里写关于前端、设计与生活的字句。
-      </p>
-
-      <div class="mt-10 flex flex-wrap items-center justify-center gap-4">
-        <a href={`${base}posts`} class="btn-gradient rounded-xl px-7 py-3 font-semibold">
-          浏览文章
-        </a>
-        <a
-          href={`${base}about`}
-          class="glass rounded-xl px-7 py-3 font-semibold transition-transform hover:-translate-y-0.5"
-        >
-          关于我
-        </a>
-      </div>
-
-      <!-- 搜索框 -->
-      <div class="mx-auto mt-10 max-w-xl text-left">
-        <Search />
+    <div class="aplus-marquee" aria-hidden="true">
+      <div>
+        ASTRO / CONTENT COLLECTIONS / CSS MOTION / PAGEFIND / NOTES / ASTRO / CONTENT COLLECTIONS / CSS MOTION / PAGEFIND / NOTES /
       </div>
     </div>
 
-    <!-- 最新文章 -->
-    {recent.length > 0 && (
-      <div class="px-4 py-10">
-        <div class="mb-8 flex items-end justify-between">
+    <div class="paper-grid">
+      <aside class="aplus-side">
+        <div class="side-block">
+          <b>INDEX</b>
+          <a href={`${base}posts`}>01 最新文章</a>
+          <a href={`${base}tags/Astro`}>02 技术笔记</a>
+          <a href={`${base}tags/CSS`}>03 设计实验</a>
+          <a href={`${base}about`}>04 关于作者</a>
+        </div>
+        <div class="side-block">
+          <b>SEARCH</b>
+          <p>结果像脚注批注一样展开，不抢正文风头。</p>
+        </div>
+        <Search />
+      </aside>
+
+      <div class="paper-feed">
+        <div class="feed-heading">
           <div>
-            <h2 class="text-2xl font-bold tracking-tight md:text-3xl">最新文章</h2>
-            <p class="mt-1 text-sm text-muted">最近的思考与笔记</p>
+            <p class="feed-eyebrow">latest dispatches</p>
+            <h2>最新文章</h2>
           </div>
-          <a href={`${base}posts`} class="link-hover text-sm font-medium text-accent">
-            查看全部 →
-          </a>
+          <a href={`${base}posts`}>查看全部</a>
         </div>
 
-        {featured && (
-          <div class="mb-6">
+        {recent.length > 0 && (
+          <div class="paper-posts">
+            {featured && (
             <PostCard
               title={featured.data.title}
               description={featured.data.description}
@@ -75,11 +86,8 @@ const base = import.meta.env.BASE_URL;
               url={featured.slug}
               featured
             />
-          </div>
-        )}
+            )}
 
-        {rest.length > 0 && (
-          <div class="grid gap-6 md:grid-cols-2">
             {rest.map((post) => (
               <PostCard
                 title={post.data.title}
@@ -92,6 +100,6 @@ const base = import.meta.env.BASE_URL;
           </div>
         )}
       </div>
-    )}
+    </div>
   </section>
 </BaseLayout>

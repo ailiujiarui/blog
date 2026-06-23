@@ -6,3 +6,7 @@ dist/
 *.log
 .env
 .env.*
+.superpowers/
+screenshots/
+.preview.pid
+src/env.d.ts
