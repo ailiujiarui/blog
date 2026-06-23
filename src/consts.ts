@@ -3,7 +3,7 @@ export const SITE = {
   /** 站点名称（显示在导航栏和 Logo） */
   title: '歌鱼',
   /** 站点副标题 / 一句话描述 */
-  description: '把想清楚的事，写成可回看的东西',
+  description: '我思故我在',
   /** 作者名 */
   author: '歌鱼',
   /** 邮箱（用于 RSS / SEO） */
