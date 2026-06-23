@@ -10,6 +10,37 @@ const recent = posts.slice(0, SITE.pageSize);
 const featured = recent[0];
 const rest = recent.slice(1);
 const base = import.meta.env.BASE_URL;
+const toDateKey = (date: Date) => date.toISOString().slice(0, 10);
+const postCountsByDate = new Map<string, number>();
+
+for (const post of posts) {
+  const key = toDateKey(post.data.pubDate);
+  postCountsByDate.set(key, (postCountsByDate.get(key) ?? 0) + 1);
+}
+
+const latestPostDate = posts.length
+  ? new Date(Math.max(...posts.map((post) => post.data.pubDate.getTime())))
+  : new Date();
+latestPostDate.setHours(0, 0, 0, 0);
+
+const heatmapWeeks = 53;
+const heatmapStart = new Date(latestPostDate);
+heatmapStart.setDate(latestPostDate.getDate() - heatmapWeeks * 7 + 1);
+
+const heatmapDays = Array.from({ length: heatmapWeeks * 7 }, (_, index) => {
+  const date = new Date(heatmapStart);
+  date.setDate(heatmapStart.getDate() + index);
+  const key = toDateKey(date);
+  const count = postCountsByDate.get(key) ?? 0;
+  return {
+    key,
+    count,
+    level: Math.min(count, 4),
+    label: `${key}: ${count} 篇文章`,
+  };
+});
+
+const activeDays = [...postCountsByDate.values()].filter((count) => count > 0).length;
 ---
 
 <BaseLayout>
@@ -55,13 +86,13 @@ const base = import.meta.env.BASE_URL;
         <div class="side-block">
           <b>INDEX</b>
           <a href={`${base}posts`}>01 最新文章</a>
-          <a href={`${base}tags/Astro`}>02 技术笔记</a>
-          <a href={`${base}tags/CSS`}>03 设计实验</a>
+          <a href={`${base}tags/开源之夏`}>02 开源之夏</a>
+          <a href={`${base}tags/随笔`}>03 随笔</a>
           <a href={`${base}about`}>04 关于作者</a>
         </div>
         <div class="side-block">
           <b>SEARCH</b>
-          <p>结果像脚注批注一样展开，不抢正文风头。</p>
+          <p>索引跟着文章走，查找时像脚注批注一样展开。</p>
         </div>
         <Search />
       </aside>
@@ -101,5 +132,40 @@ const base = import.meta.env.BASE_URL;
         )}
       </div>
     </div>
+
+    <section class="heatmap-section">
+      <div class="heatmap-heading">
+        <div>
+          <p class="feed-eyebrow">writing heatmap</p>
+          <h2>写作热力图</h2>
+        </div>
+        <div class="heatmap-stats">
+          <span>{posts.length} notes</span>
+          <span>{activeDays} active days</span>
+        </div>
+      </div>
+
+      <div class="heatmap-scroll" role="img" aria-label={`最近 ${heatmapWeeks} 周写作热力图`}>
+        <div class="heatmap-grid">
+          {heatmapDays.map((day) => (
+            <span
+              class:list={['heat-cell', `heat-cell--${day.level}`]}
+              title={day.label}
+              aria-label={day.label}
+            />
+          ))}
+        </div>
+      </div>
+
+      <div class="heatmap-legend" aria-hidden="true">
+        <span>less</span>
+        <i class="heat-cell heat-cell--0"></i>
+        <i class="heat-cell heat-cell--1"></i>
+        <i class="heat-cell heat-cell--2"></i>
+        <i class="heat-cell heat-cell--3"></i>
+        <i class="heat-cell heat-cell--4"></i>
+        <span>more</span>
+      </div>
+    </section>
   </section>
 </BaseLayout>
