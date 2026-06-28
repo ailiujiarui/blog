@@ -33,6 +33,8 @@ const required = [
   ['postCard', 'aplus-post'],
   ['postCard', 'aplus-post-meta'],
   ['search', 'search-footnote'],
+  ['search', 'quick index'],
+  ['search', 'bundlePath'],
 ];
 
 const forbidden = [
@@ -41,6 +43,10 @@ const forbidden = [
   ['index', '技术笔记'],
   ['index', '设计实验'],
   ['search', 'npm run build'],
+  ['index', '索引跟着文章走'],
+  ['search', 'search / footnote'],
+  ['search', '搜索索引正在准备'],
+  ['search', '本地预览暂不加载搜索'],
   ['postCard', '装饰性渐变光晕'],
   ['header', 'bg-gradient-to-br'],
 ];

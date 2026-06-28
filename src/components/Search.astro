@@ -5,7 +5,7 @@ const base = import.meta.env.BASE_URL;
 const pagefindCss = `${base}pagefind/pagefind-ui.css`;
 ---
 <div class="search-footnote">
-  <div class="search-label">search / footnote</div>
+  <div class="search-label">quick index</div>
   <div id="search"></div>
 </div>
 
@@ -45,6 +45,12 @@ const pagefindCss = `${base}pagefind/pagefind-ui.css`;
   :global(#search .pagefind-ui__result-excerpt) {
     color: rgb(var(--color-muted)) !important;
   }
+  :global(.search-fallback) {
+    padding: 0.45rem 0;
+    color: rgb(var(--color-muted));
+    font-size: 0.72rem;
+    line-height: 1.7;
+  }
 </style>
 
 <script>
@@ -56,9 +62,12 @@ const pagefindCss = `${base}pagefind/pagefind-ui.css`;
       const base = import.meta.env.BASE_URL;
       const pagefindUrl = `${base}pagefind/pagefind-ui.js`;
       // @ts-ignore - pagefind-ui.js 由构建后生成
-      const { PagefindUI } = await import(/* @vite-ignore */ pagefindUrl);
+      const pagefindModule = await import(/* @vite-ignore */ pagefindUrl);
+      const PagefindUI = pagefindModule.PagefindUI || window.PagefindUI;
+      if (!PagefindUI) throw new Error('Pagefind UI unavailable');
       new PagefindUI({
         element: '#search',
+        bundlePath: `${base}pagefind/`,
         showSubResults: true,
         translations: {
           placeholder: '搜索文章…',
@@ -69,7 +78,7 @@ const pagefindCss = `${base}pagefind/pagefind-ui.css`;
     } catch (e) {
       // 本地 dev 模式下 /pagefind 还不存在，静默降级
       el.innerHTML =
-        '<div class="py-2 text-sm text-muted">搜索索引正在准备，发布后自动接入。</div>';
+        '<div class="search-fallback">index offline</div>';
     }
   }
   initPagefind();
