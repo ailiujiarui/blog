@@ -1,4 +1,5 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
+import { MANUAL_TAGS } from '../consts';
 
 export type Post = CollectionEntry<'posts'>;
 
@@ -32,7 +33,12 @@ export async function getAllTags(): Promise<{ tag: string; count: number }[]> {
       counter.set(tag, (counter.get(tag) ?? 0) + 1);
     }
   }
+
+  for (const tag of MANUAL_TAGS) {
+    counter.set(tag, counter.get(tag) ?? 0);
+  }
+
   return [...counter.entries()]
     .map(([tag, count]) => ({ tag, count }))
-    .sort((a, b) => b.count - a.count);
+    .sort((a, b) => b.count - a.count || a.tag.localeCompare(b.tag, 'zh-CN'));
 }

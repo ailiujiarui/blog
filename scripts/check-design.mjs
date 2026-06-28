@@ -18,6 +18,7 @@ const required = [
   ['index', 'heatmap-layout'],
   ['index', 'heatmap-panel'],
   ['index', 'heat-cell'],
+  ['index', 'Godot学习'],
   ['index', '开源之夏'],
   ['index', '随笔'],
   ['styles', 'paperScan'],

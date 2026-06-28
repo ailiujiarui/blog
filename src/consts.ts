@@ -27,3 +27,6 @@ export const NAV_LINKS = [
   { text: '标签', href: '/tags' },
   { text: '关于', href: '/about' },
 ] as const;
+
+/** 预先展示的标签：即使暂时没有文章，也会生成标签页 */
+export const MANUAL_TAGS = ['Godot学习'] as const;
