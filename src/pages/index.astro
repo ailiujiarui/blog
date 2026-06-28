@@ -23,7 +23,7 @@ const latestPostDate = posts.length
   : new Date();
 latestPostDate.setHours(0, 0, 0, 0);
 
-const heatmapWeeks = 53;
+const heatmapWeeks = 36;
 const heatmapStart = new Date(latestPostDate);
 heatmapStart.setDate(latestPostDate.getDate() - heatmapWeeks * 7 + 1);
 
@@ -41,6 +41,19 @@ const heatmapDays = Array.from({ length: heatmapWeeks * 7 }, (_, index) => {
 });
 
 const activeDays = [...postCountsByDate.values()].filter((count) => count > 0).length;
+const tagCounts = new Map<string, number>();
+
+for (const post of posts) {
+  for (const tag of post.data.tags) {
+    tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1);
+  }
+}
+
+const topTags = [...tagCounts.entries()]
+  .sort((a, b) => b[1] - a[1])
+  .slice(0, 4);
+
+const latestActivity = posts.slice(0, 3);
 ---
 
 <BaseLayout>
@@ -133,7 +146,7 @@ const activeDays = [...postCountsByDate.values()].filter((count) => count > 0).l
       </div>
     </div>
 
-    <section class="heatmap-section">
+    <section id="writing-heatmap" class="heatmap-section">
       <div class="heatmap-heading">
         <div>
           <p class="feed-eyebrow">writing heatmap</p>
@@ -145,26 +158,47 @@ const activeDays = [...postCountsByDate.values()].filter((count) => count > 0).l
         </div>
       </div>
 
-      <div class="heatmap-scroll" role="img" aria-label={`最近 ${heatmapWeeks} 周写作热力图`}>
-        <div class="heatmap-grid">
-          {heatmapDays.map((day) => (
-            <span
-              class:list={['heat-cell', `heat-cell--${day.level}`]}
-              title={day.label}
-              aria-label={day.label}
-            />
-          ))}
-        </div>
-      </div>
+      <div class="heatmap-layout">
+        <div>
+          <div class="heatmap-scroll" role="img" aria-label={`最近 ${heatmapWeeks} 周写作热力图`}>
+            <div class="heatmap-grid">
+              {heatmapDays.map((day) => (
+                <span
+                  class:list={['heat-cell', `heat-cell--${day.level}`]}
+                  title={day.label}
+                  aria-label={day.label}
+                />
+              ))}
+            </div>
+          </div>
 
-      <div class="heatmap-legend" aria-hidden="true">
-        <span>less</span>
-        <i class="heat-cell heat-cell--0"></i>
-        <i class="heat-cell heat-cell--1"></i>
-        <i class="heat-cell heat-cell--2"></i>
-        <i class="heat-cell heat-cell--3"></i>
-        <i class="heat-cell heat-cell--4"></i>
-        <span>more</span>
+          <div class="heatmap-legend" aria-hidden="true">
+            <span>less</span>
+            <i class="heat-cell heat-cell--0"></i>
+            <i class="heat-cell heat-cell--1"></i>
+            <i class="heat-cell heat-cell--2"></i>
+            <i class="heat-cell heat-cell--3"></i>
+            <i class="heat-cell heat-cell--4"></i>
+            <span>more</span>
+          </div>
+        </div>
+
+        <aside class="heatmap-panel">
+          <b>RECENT</b>
+          {latestActivity.map((post) => (
+            <a href={`${base}posts/${post.slug}`}>
+              <span>{toDateKey(post.data.pubDate)}</span>
+              {post.data.title}
+            </a>
+          ))}
+
+          <b>TOP TAGS</b>
+          <div class="heatmap-tags">
+            {topTags.map(([tag, count]) => (
+              <span>#{tag} {count}</span>
+            ))}
+          </div>
+        </aside>
       </div>
     </section>
   </section>

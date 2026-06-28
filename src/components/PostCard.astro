@@ -26,10 +26,8 @@ const href = `${base}posts/${url.replace(/^\//, '')}`;
   </div>
 
   <div class="aplus-post-main">
-    <div class="mb-3 flex flex-wrap items-center gap-2 text-xs text-muted">
+    <div class="aplus-post-meta">
       <span class="uppercase tracking-[0.16em]">note</span>
-      <span aria-hidden="true">/</span>
-      <FormattedDate date={pubDate} />
       {tags.slice(0, 2).map((tag) => (
         <span class="text-accent">#{tag}</span>
       ))}
